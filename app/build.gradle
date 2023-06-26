@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -63,4 +64,17 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    // NETWORKING:
+    // Retrofit -> Networking Library
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    // Logging
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+    // Serialization -> Cast Json from API to Data Class
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // DEPENDENCY INJECTION -> Dagger 2
+    implementation 'com.google.dagger:dagger:2.42'
+    kapt 'com.google.dagger:dagger-compiler:2.42'
 }
