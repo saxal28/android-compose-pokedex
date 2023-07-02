@@ -11,25 +11,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.pokedex_android_compose.network.AppService
+import com.example.pokedex_android_compose.ui.screens.pokemonsearch.PokemonSearchScreen
 import com.example.pokedex_android_compose.ui.theme.Pokedex_android_composeTheme
 import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
-
-    @Inject
-    lateinit var appService: AppService
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        MainApplication.appComponent.inject(this)
-
         setContent {
-
-            LaunchedEffect(key1 = Unit) {
-                appService.all()
-            }
+            val navController = rememberNavController()
 
             Pokedex_android_composeTheme {
                 // A surface container using the 'background' color from the theme
@@ -37,7 +32,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    NavHost(navController = navController, startDestination = "profile") {
+                        composable("profile") { PokemonSearchScreen() }
+                    }
                 }
             }
         }

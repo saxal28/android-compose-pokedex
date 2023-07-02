@@ -1,5 +1,7 @@
 package com.example.pokedex_android_compose.dagger
 
+import com.example.pokedex_android_compose.network.AppRepository
+import com.example.pokedex_android_compose.network.AppRepositoryImpl
 import com.example.pokedex_android_compose.network.AppService
 import dagger.Module
 import dagger.Provides
@@ -35,5 +37,10 @@ class AppModule {
     @Singleton
     fun providesAppService(retrofit: Retrofit): AppService {
         return retrofit.create(AppService::class.java)
+    }
+
+    @Provides
+    fun providesAppRepository(appService: AppService): AppRepository {
+        return AppRepositoryImpl(appService)
     }
 }
