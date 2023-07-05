@@ -11,10 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.pokedex_android_compose.network.AppService
+import com.example.pokedex_android_compose.ui.screens.pokemondetail.PokemonDetailScreen
 import com.example.pokedex_android_compose.ui.screens.pokemonsearch.PokemonSearchScreen
 import com.example.pokedex_android_compose.ui.theme.Pokedex_android_composeTheme
 import javax.inject.Inject
@@ -33,26 +36,20 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     NavHost(navController = navController, startDestination = "profile") {
-                        composable("profile") { PokemonSearchScreen() }
+                        composable("profile") {
+                            PokemonSearchScreen(
+                                navigateToPokemonDetails = { id -> navController.navigate("details/${id}") }
+                            )
+                        }
+                        composable(
+                            "details/{id}",
+                            arguments = listOf(navArgument("id") { type = NavType.StringType })
+                        ) { PokemonDetailScreen(
+                            onBack = { navController.popBackStack() }
+                        ) }
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Pokedex_android_composeTheme {
-        Greeting("Android")
     }
 }

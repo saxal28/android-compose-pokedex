@@ -1,8 +1,10 @@
 package com.example.pokedex_android_compose.ui.screens.pokemonsearch
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,14 +44,20 @@ import coil.request.ImageRequest
 import java.util.Locale
 
 @Composable
-fun PokemonSearchScreen(viewModel: PokemonSearchViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
-    Screen(viewModel.viewState)
+fun PokemonSearchScreen(
+    navigateToPokemonDetails: (String) -> Unit = {},
+    viewModel: PokemonSearchViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+) {
+    Screen(viewModel.viewState, navigateToPokemonDetails)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-private fun Screen(viewState: PokemonSearchViewState) {
+private fun Screen(
+    viewState: PokemonSearchViewState,
+    navigateToPokemonDetails: (String) -> Unit = {},
+) {
     Scaffold(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -56,7 +65,7 @@ private fun Screen(viewState: PokemonSearchViewState) {
                 .padding(20.dp)
         ) {
             Text(
-                text = "What Pokemon are you looking for?",
+                text = "What Pokemon\nare you looking for?",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Black,
                 fontSize = 26.sp,
@@ -77,6 +86,16 @@ private fun Screen(viewState: PokemonSearchViewState) {
                 leadingIcon = {
                     Icon(Icons.Default.Search, contentDescription = "")
                 },
+                trailingIcon = {
+                    AnimatedVisibility(visible = viewState.searchText.isNotEmpty()) {
+                        Icon(
+                            Icons.Filled.Clear,
+                            contentDescription = "",
+                            modifier = Modifier.clickable { viewState.clear() })
+
+                    }
+
+                },
                 shape = RoundedCornerShape(30.dp),
                 placeholder = {
                     Text(text = "Search pokemon name")
@@ -90,7 +109,8 @@ private fun Screen(viewState: PokemonSearchViewState) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(5.dp)
-                            .animateItemPlacement(),
+                            .animateItemPlacement()
+                            .clickable { navigateToPokemonDetails(pokemon.id) },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         AsyncImage(
