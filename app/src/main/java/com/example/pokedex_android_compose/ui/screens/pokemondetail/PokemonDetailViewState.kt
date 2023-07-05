@@ -6,15 +6,12 @@ import androidx.compose.runtime.setValue
 import com.example.pokedex_android_compose.network.model.PokemonDetail
 
 class PokemonDetailViewState {
+    var selectedTabIndex: Int by mutableStateOf(0)
     var pokemonDetail: PokemonDetail? by mutableStateOf(null)
-    var isLoading by mutableStateOf(false)
-        private set
 
-    fun isLoading() {
-        isLoading = true
-    }
+    val tabs: List<String> = listOf("About", "Base Stats", "Evolution", "Moves")
 
-    fun finishedLoading() {
-        isLoading = false
+    fun selectTab(index: Int) {
+        selectedTabIndex = index
     }
 }
